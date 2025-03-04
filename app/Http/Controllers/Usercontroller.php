@@ -88,23 +88,69 @@ class UserController extends Controller
         // $user->isClean(); // true
         // dd($user->isDirty());\
 
-        $user = UserModel::create([
-            'username' => 'manager11',
-            'nama' => 'Manager11',
-            'password' => Hash::make('12345'),
-            'level_id' => 2,
+        // $user = UserModel::create([
+        //     'username' => 'manager11',
+        //     'nama' => 'Manager11',
+        //     'password' => Hash::make('12345'),
+        //     'level_id' => 2,
+        // ]);
+
+        // $user->username = 'manager12';
+
+        // $user->save();
+
+        // $user->wasChanged();
+        // $user->wasChanged('username');
+        // $user->wasChanged(['username', 'level_id']);
+        // $user->wasChanged('nama');
+        // $user->wasChanged(['nama', 'username']);
+        // dd($user->wasChanged(['nama', 'username'])); // true
+        // // SA
+
+        $users = UserModel::all();
+        return view('user', ['data' => $users]);
+    }
+    public function tambah()
+    {
+        return view('user_tambah');
+    }
+
+    // Menyimpan data user baru
+    public function tambah_simpan(Request $request)
+    {
+        UserModel::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => Hash::make($request->password),
+            'level_id' => $request->level_id
         ]);
 
-        $user->username = 'manager12';
+        return redirect('/user');
+    }
 
+    // Menampilkan form ubah user
+    public function ubah($id)
+    {
+        $user = UserModel::find($id);
+        return view('user_ubah', ['data' => $user]);
+    }
+
+    // Menyimpan perubahan data user
+    public function ubah_simpan($id, Request $request)
+    {
+        $user = UserModel::find($id);
+        $user->username = $request->username;
+        $user->nama = $request->nama;
+        $user->level_id = $request->level_id;
         $user->save();
 
-        $user->wasChanged();
-        $user->wasChanged('username');
-        $user->wasChanged(['username', 'level_id']);
-        $user->wasChanged('nama');
-        $user->wasChanged(['nama', 'username']);
-        dd($user->wasChanged(['nama', 'username'])); // true
-        // SA
+        return redirect('/user');
+    }
+
+    // Menghapus user
+    public function hapus($id)
+    {
+        UserModel::destroy($id);
+        return redirect('/user');
     }
 }

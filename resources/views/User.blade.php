@@ -1,48 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Data User</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        table {
-            margin: 0 auto;
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>Data User</h1>
-
+    <a href="{{ route('user.tambah') }}">Tambah User</a>
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <th>ID</th>
             <th>Username</th>
             <th>Nama</th>
             <th>ID Level Pengguna</th>
-            <th>Jumlah Pengguna</th> <!-- Tambahkan data di kolom ini -->
+            <th>Aksi</th>
         </tr>
-        @foreach ($users as $user)
+        @foreach ($data as $d)
         <tr>
-            <td>{{ $user->user_id }}</td>
-            <td>{{ $user->username }}</td>
-            <td>{{ $user->nama }}</td>
-            <td>{{ $user->level_id }}</td>
+            <td>{{ $d->id }}</td>
+            <td>{{ $d->username }}</td>
+            <td>{{ $d->nama }}</td>
+            <td>{{ $d->level_id }}</td>
             <td>
-                {{ $users->where('level_id', $user->level_id)->count() }} <!-- Menampilkan jumlah pengguna dengan level yang sama -->
+                <a href="{{ route('user.ubah', ['id' => $d->user_id]) }}">Ubah</a>
+                <a href="{{ route('user.hapus', ['id' => $d->user_id]) }}">Hapus</a>
+
             </td>
         </tr>
         @endforeach
     </table>
-
-    <h2>Jumlah Pengguna dengan Level 2: {{ $jumlah_pengguna }}</h2>
 </body>
 </html>

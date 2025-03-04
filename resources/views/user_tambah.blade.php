@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Tambah User</title>
 </head>
 <body>
     <h1>Form Tambah Data User</h1>
-    <a href="{{ route('user.index') }}">Kembali</a>
+    <a href="{{ route('user.index') }}">Kembali</a> <!-- Updated this line -->
     <form method="post" action="{{ route('user.tambah_simpan') }}">
-        @csrf
+        {{ csrf_field() }}
         <label>Username</label>
-        <input type="text" name="username" placeholder="Masukkan Username">
-        <br>
+        <input type="text" name="username" placeholder="Masukkan Username"><br>
+
         <label>Nama</label>
-        <input type="text" name="nama" placeholder="Masukkan Nama">
-        <br>
+        <input type="text" name="nama" placeholder="Masukkan Nama"><br>
+
         <label>Password</label>
-        <input type="password" name="password" placeholder="Masukkan Password">
-        <br>
+        <input type="password" name="password" placeholder="Masukkan Password"><br>
+
         <label>Level ID</label>
-        <input type="number" name="level_id">
-        <br>
+        <input type="number" name="level_id"><br>
+
         <input type="submit" name="btn btn-success" value="Simpan">
     </form>
 </body>
