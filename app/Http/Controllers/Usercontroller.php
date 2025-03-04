@@ -28,8 +28,16 @@ class UserController extends Controller
 
         // practicum 2,2
         // $user = UserModel::findOrFail(1);
-        $user = UserModel::where('username','manager9')->firstOrFail();
+        // $user = UserModel::where('username','manager9')->firstOrFail();
+
+        // Practicum 2.3
+        $jumlah_pengguna = UserModel::where('level_id',2 )->count();
+        $users = UserModel::all();
+        // $user = UserModel::firstWhere('level_id', 1);
+        // dd($user);
         // Return the view with the user data
-        return view('user', ['data' => $user]);
+
+        // return view('user', ['userCount' => $userCount]);
+        return view('user', compact('jumlah_pengguna','users'));
     }
 }
