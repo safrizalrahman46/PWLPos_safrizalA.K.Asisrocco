@@ -10,15 +10,15 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Define the data to be updated
+
         $data = [
-            'nama' => 'Pelanggan Pertama', // Name to be updated
+            'level_id' => 2,
+            'username' => 'manager_tiga',
+            'nama' => 'manager 3',
+            'password' => Hash::make('12345')
         ];
 
-        // Update user where username = 'customer-1'
-        UserModel::where('username', 'customer-1')->update($data);
-
-        // Access the UserModel to get all data from the m_user table
+        UserModel::create($data);
         $user = UserModel::all(); // Retrieve all users
 
         // Return the view with the user data
