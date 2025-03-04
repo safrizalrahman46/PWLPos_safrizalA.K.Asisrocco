@@ -31,13 +31,34 @@ class UserController extends Controller
         // $user = UserModel::where('username','manager9')->firstOrFail();
 
         // Practicum 2.3
-        $jumlah_pengguna = UserModel::where('level_id',2 )->count();
-        $users = UserModel::all();
+        // $jumlah_pengguna = UserModel::where('level_id',2 )->count();
+        // $users = UserModel::all();
         // $user = UserModel::firstWhere('level_id', 1);
         // dd($user);
         // Return the view with the user data
 
+        // Practicum 2.4
+        // $user = UserModel::firstOrCreate(
+        //     [
+        //         'username' => 'manager22',
+        //         'nama' => 'Manager dua dua',
+        //         'password' => Hash::make('2131231'),
+        //         'level_id' => 2,
+        //     ],
+        // );
+
+        $user = UserModel::firstOrNew(
+            [
+                'username' => 'manager33',
+                'nama' => 'Manager tiga tiga',
+                'password' => Hash::make('213123211'),
+                'level_id' => 2,
+            ],
+        );
+        $user->save();
+
+        return view('users', ['data' => $user]);
         // return view('user', ['userCount' => $userCount]);
-        return view('user', compact('jumlah_pengguna','users'));
+        // return view('user', compact('jumlah_pengguna','users'));
     }
 }
