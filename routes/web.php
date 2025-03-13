@@ -29,7 +29,7 @@ use App\Http\Controllers\KategoriController;
 |
 */
 
-Route::get('/hello', [WelcomeController::class, 'hello']);
+// Route::get('/hello', [WelcomeController::class, 'hello']);
 
 // Route::get('mahasiswa', function ($id) {});
 // Route::post('mahasiswa', function ($id) {});
@@ -167,46 +167,59 @@ Route::get('/hello', [WelcomeController::class, 'hello']);
 
 // PWLPOS
 
-Route::get ('/level', [LevelController::class, 'index' ]) ;
-Route :: get ('/level', [LevelController::class, 'index' ]);
-Route :: get ('/kategori', action: [KategoriController :: class, 'index' ]);
-// Route :: get ('/public/user', [UserController::class, 'index' ]);
-// Route :: get ('/user', [UserController::class, 'index' ]);
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
+// Route::get ('/level', [LevelController::class, 'index' ]) ;
+// Route :: get ('/level', [LevelController::class, 'index' ]);
+// Route :: get ('/kategori', action: [KategoriController :: class, 'index' ]);
+// // Route :: get ('/public/user', [UserController::class, 'index' ]);
+// // Route :: get ('/user', [UserController::class, 'index' ]);
+// Route::get('/user', [UserController::class, 'index'])->name('user.index');
 
-Route::get('/user/tambah', [UserController::class, 'tambah'])->name('user.tambah');
-Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan'])->name('user.tambah_simpan');
-Route::get('/user/ubah/{id}', [UserController::class, 'ubah'])->name('user.ubah');
-Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan'])->name('user.ubah_simpan');
-Route::get('/user/hapus/{id}', [UserController::class, 'hapus'])->name('user.hapus');
+// Route::get('/user/tambah', [UserController::class, 'tambah'])->name('user.tambah');
+// Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan'])->name('user.tambah_simpan');
+// Route::get('/user/ubah/{id}', [UserController::class, 'ubah'])->name('user.ubah');
+// Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan'])->name('user.ubah_simpan');
+// Route::get('/user/hapus/{id}', [UserController::class, 'hapus'])->name('user.hapus');
 
 
 // JOBSHIT 5
 Route:: get ('/', [WelcomeController :: class,'index' ]);
 
-// User routes group
-Route::group(['prefix' => 'user'], function () {
-    // Menampilkan halaman awal user
+
+Route::group(['prefix'=>'user'], function(){
     Route::get('/', [UserController::class, 'index']);
-
-    // Menampilkan data user dalam bentuk JSON untuk datatables
     Route::post('/list', [UserController::class, 'list']);
-
-    // Menampilkan halaman form tambah user
     Route::get('/create', [UserController::class, 'create']);
-
-    // Menyimpan data user baru
     Route::post('/', [UserController::class, 'store']);
-
-    // Menampilkan detail user
     Route::get('/{id}', [UserController::class, 'show']);
-
-    // Menampilkan halaman form edit user
     Route::get('/{id}/edit', [UserController::class, 'edit']);
-
-    // Menyimpan perubahan data user
     Route::put('/{id}', [UserController::class, 'update']);
-
-    // Menghapus data user
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
+// // User routes group
+// Route::group(['prefix' => 'user'], function () {
+//     // Menampilkan halaman awal user
+//     Route::get('/', [UserController::class, 'index']);
+
+//     // Menampilkan data user dalam bentuk JSON untuk datatables
+//     Route::post('/list', [UserController::class, 'list']);
+
+//     // Menampilkan halaman form tambah user
+//     Route::get('/create', [UserController::class, 'create']);
+
+//     // Menyimpan data user baru
+//     Route::post('/', [UserController::class, 'store']);
+
+//     // Menampilkan detail user
+//     Route::get('/{id}', [UserController::class, 'show']);
+
+//     // Menampilkan halaman form edit user
+//     Route::get('/{id}/edit', [UserController::class, 'edit']);
+
+//     // Menyimpan perubahan data user
+//     Route::put('/{id}', [UserController::class, 'update']);
+
+//     // Menghapus data user
+//     Route::delete('/{id}', [UserController::class, 'destroy']);
+
+//     // Route::post('/user/list', [UserController::class, 'list'])->name('user.list');
+// });
