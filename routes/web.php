@@ -180,3 +180,5 @@ Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan'])->na
 Route::get('/user/hapus/{id}', [UserController::class, 'hapus'])->name('user.hapus');
 
 
+// JOBSHIT 5
+Route:: get ('/', [WelcomeController :: class,'index' ]);
