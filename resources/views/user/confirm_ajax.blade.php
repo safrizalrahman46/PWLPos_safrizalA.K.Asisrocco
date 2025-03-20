@@ -43,7 +43,7 @@ delete">
                         </tr>
                         <tr>
                             <th class="text-right col-3">Nama :</th>
-                            <td class="col-9">{{ $user > nama }}</td>
+                            <td class="col-9">{{ $user -> nama }}</td>
                         </tr>
                     </table>
                 </div>

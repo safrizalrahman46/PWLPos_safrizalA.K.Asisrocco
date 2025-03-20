@@ -6,11 +6,13 @@
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/create') }}">Tambah</a>
-                <button onclick="modalAction('{{ url('user/create_ajax') }}' )" class="btn btn-sm btn-success mt-1">Tambah
-                    Ajax</button>
+                <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
             </div>
         </div>
+        {{-- BENER GA NYA GATAU --}}
+        <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
         <div class="card-body">
+
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible">
                     <h5><i class="icon fas fa-check"></i> Berhasil</h5>
@@ -44,7 +46,7 @@
                                 <th>Username</th>
                                 <th>Nama</th>
                                 <th>Level Pengguna</th>
-                                <th>Action</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                     </table>
@@ -57,19 +59,14 @@
 
         @push('js')
             <script>
-                function modalAction(url = '') {
-                    $('#myModal').load(url, function() {
-                        $('#myModal').modal('show');
-
-                    });
-
-                }
-
+                function modalAction(url = ''){
+    $('#myModal').load(url,function(){
+        $('#myModal').modal('show');
+    });
+}
                 var dataUser;
                 $(document).ready(function() {
-                    {{--  var dataUser = $('#table_user').DataTable({  --}}
-                    dataUser = $('#table_user').DataTable({
-
+                    var dataUser = $('#table_user').DataTable({
                         serverSide: true,
                         ajax: {
                             url: "{{ url('user/list') }}",
