@@ -28,22 +28,15 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kategoriname</label>
-                        <input value="{{ $kategori->kategoriname }}" type="text" name="kategoriname" id="kategoriname" class="form-control"
+                        <label>Kode Kategori</label>
+                        <input value="{{ $kategori->kategori_kode }}" type="text" name="kategori_kode" id="kategori_kode" class="form-control"
                             required>
-                        <small id="error-kategoriname" class="error-text form-text text-danger"></small>
+                        <small id="error-kategori_kode" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Nama</label>
-                        <input value="{{ $kategori->nama }}" type="text" name="nama" id="nama" class="form-control" required>
-                        <small id="error-nama" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input value="" type="password" name="password" id="password" class="form-control">
-                        <small class="form-text text-muted">Abaikan jika tidak ingin ubah
-                            password</small>
-                        <small id="error-password" class="error-text form-text text-danger"></small>
+                        <label>Nama Kategori</label>
+                        <input value="{{ $kategori->kategori_nama }}" type="text" name="kategori_nama" id="kategori_nama" class="form-control" required>
+                        <small id="error-kategori_nama" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -57,10 +50,8 @@
         $(document).ready(function () {
             $("#form-edit").validate({
                 rules: {
-                    level_id: { required: true, number: true },
-                    kategoriname: { required: true, minlength: 3, maxlength: 20 },
-                    nama: { required: true, minlength: 3, maxlength: 100 },
-                    password: { minlength: 6, maxlength: 20 }
+                    kategori_kode: { required: true, minlength: 3, maxlength: 20 },
+                    kategori_nama: { required: true, minlength: 3, maxlength: 100 }
                 },
                 submitHandler: function (form) {
                     $.ajax({

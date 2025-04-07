@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\m_level;
+use App\Models\LevelModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -62,7 +62,7 @@ class LevelController extends Controller
                 ]);
             }
 
-            m_level::create($request->all());
+            LevelModel::create($request->all());
             return response()->json([
                 'status' => true,
                 'message' => 'Data level berhasil disimpan'
@@ -78,7 +78,7 @@ class LevelController extends Controller
             'level_kode' => 'required|string|min:3|unique:m_level,level_kode',
             'level_nama' => 'required|string|max: 100'
         ]);
-        m_level::create([
+        LevelModel::create([
             'level_kode' => $request->level_kode,
             'level_nama' => $request->level_nama
         ]);
@@ -87,7 +87,7 @@ class LevelController extends Controller
 
     public function list(Request $request)
     {
-        $levels = m_level::select('level_id', 'level_kode','level_nama');
+        $levels = LevelModel::select('level_id', 'level_kode','level_nama');
 
         // Filter data level berdasarkan level_id
         if ($request->level_id) {
@@ -95,9 +95,9 @@ class LevelController extends Controller
         }
 
         return DataTables::of($levels)
-            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
+            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
             ->addIndexColumn()
-            ->addColumn('aksi', function ($level) {  // menambahkan kolom aksi
+            ->addColumn('aksi', function ($level) {  // menambahkan kolom aksi 
                 $btn  = '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
@@ -106,14 +106,14 @@ class LevelController extends Controller
                     '/delete_ajax') . '\')"  class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
-            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
+            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
             ->make(true);
     }
 
     // Menampilkan detail level
     public function show(string $id)
     {
-        $level = m_level::find($id);
+        $level = LevelModel::find($id);
         $breadcrumb = (object) [
             'title' => 'Detail Level',
             'list' => ['Home', 'Level', 'Detail']
@@ -129,7 +129,7 @@ class LevelController extends Controller
     // Menampilkan halaman form edit level
     public function edit(string $id)
     {
-        $level = m_level::find($id);
+        $level = LevelModel::find($id);
         $breadcrumb = (object) [
             'title' => 'Edit Level',
             'list' => ['Home', 'Level', 'Edit']
@@ -148,7 +148,7 @@ class LevelController extends Controller
             'level_nama' => 'required|string|max:100',
         ]);
 
-        m_level::find($id)->update([
+        LevelModel::find($id)->update([
             // level_id harus diisi dan berupa angka
             'level_kode' => $request->level_kode,
             'level_nama' => $request->level_nama
@@ -158,34 +158,32 @@ class LevelController extends Controller
 
     public function edit_ajax(string $id)
     {
-        $level = m_level::find($id);
+        $level = LevelModel::find($id);
         return view('level.edit_ajax', ['level' => $level]);
     }
 
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
+        // cek apakah request dari ajax 
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'level_id' => 'required|integer',
-                'levelname' => 'required|max:20|unique:m_level,level_name,' . $id . ',level_id',
-                'nama'     => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'level_kode' => 'required|string|min:3|unique:m_level,level_kode,' . $id . ',level_id',
+                'level_nama' => 'required|string|max:100'
             ];
 
-            // use Illuminate\Support\Facades\Validator;
+            // use Illuminate\Support\Facades\Validator; 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'   => false,    // respon json, true: berhasil, false: gagal
+                    'status'   => false,    // respon json, true: berhasil, false: gagal 
                     'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
+                    'msgField' => $validator->errors()  // menunjukkan field mana yang error 
                 ]);
             }
-            $check = m_level::find($id);
+            $check = LevelModel::find($id);
             if ($check) {
-                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
+                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request 
                     $request->request->remove('password');
                 }
                 $check->update($request->all());
@@ -206,13 +204,13 @@ class LevelController extends Controller
     // Menghapus data level
     public function destroy(string $id)
     {
-        $check = m_level::find($id);
+        $check = LevelModel::find($id);
         if (!$check) {
             // untuk mengecek apakah data level dengan id yang dimaksud ada atau tidak
             return redirect('/level')->with('error', 'Data level tidak ditemukan ');
         }
         try {
-            m_level::destroy($id);
+            LevelModel::destroy($id);
             // Hapus data level
             return redirect('/level')->with('success', 'Data level berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -223,17 +221,17 @@ class LevelController extends Controller
 
     public function confirm_ajax(string $id)
     {
-        $level = m_level::find($id);
+        $level = LevelModel::find($id);
         return view('level.confirm_ajax', ['level' => $level]);
     }
 
     public function delete_ajax(Request $request, $id)
     {
         if($request->ajax() || $request->wantsJson()){
-            $level = m_level::find($id);
+            $level = LevelModel::find($id);
             if($level){
                 try {
-                    m_level::destroy($id);
+                    LevelModel::destroy($id);
                     return response()->json([
                         'status'  => true,
                         'message' => 'Data berhasil dihapus'

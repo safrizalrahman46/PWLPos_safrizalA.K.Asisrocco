@@ -1,9 +1,9 @@
-@empty($barang)
+@empty($penjualan)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria label="Close"><span
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
@@ -11,54 +11,48 @@
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                     Data yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/barang') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/penjualan') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/barang/' . $barang->barang_id . '/update_ajax') }}" method="POST" id="form-edit">
+    <form action="{{ url('/penjualan/' . $penjualan->penjualan_id . '/update_ajax') }}" method="POST" id="form-edit">
         @csrf
         @method('PUT')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Barang</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria label="Close"><span
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Penjualan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kategori Barang</label>
-                        <select name="kategori_id" id="kategori_id" class="form-control" required>
-                            <option value="">- Pilih Kategori -</option>
-                            @foreach($kategori as $k)
-                                <option {{ ($k->kategori_id == $barang->kategori_id) ? 'selected' : '' }} value="{{ $k->kategori_id }}">
-                                    {{ $k->kategori_nama }}
+                        <label>User</label>
+                        <select name="user_id" id="user_id" class="form-control" required>
+                            <option value="">- Pilih User -</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->user_id }}" @if($penjualan->user_id == $user->user_id) selected @endif>
+                                    {{ $user->nama }}
                                 </option>
                             @endforeach
                         </select>
-                        <small id="error-kategori_id" class="error-text form-text text-danger"></small>
+                        <small id="error-user_id" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Kode Barang</label>
-                        <input value="{{ $barang->barang_kode }}" type="text" name="barang_kode" id="barang_kode" class="form-control"
-                            required>
-                        <small id="error-barang_kode" class="error-text form-text text-danger"></small>
+                        <label>Pembeli</label>
+                        <input value="{{ $penjualan->pembeli }}" type="text" name="pembeli" id="pembeli" class="form-control" required>
+                        <small id="error-pembeli" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Nama Barang</label>
-                        <input value="{{ $barang->barang_nama }}" type="text" name="barang_nama" id="barang_nama" class="form-control" required>
-                        <small id="error-barang_nama" class="error-text form-text text-danger"></small>
+                        <label>Kode Penjualan</label>
+                        <input value="{{ $penjualan->penjualan_kode }}" type="text" name="penjualan_kode" id="penjualan_kode" class="form-control" required>
+                        <small id="error-penjualan_kode" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
-                        <label>Harga Beli</label>
-                        <input value="{{ $barang->harga_beli }}" type="text" name="harga_beli" id="harga_beli" class="form-control" required>
-                        <small id="error-harga_beli" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Harga Jual</label>
-                        <input value="{{ $barang->harga_jual }}" type="text" name="harga_jual" id="harga_jual" class="form-control" required>
-                        <small id="error-harga_jual" class="error-text form-text text-danger"></small>
+                        <label>Tanggal Penjualan</label>
+                        <input value="{{ date('Y-m-d\TH:i', strtotime($penjualan->penjualan_tanggal)) }}" type="datetime-local" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" required>
+                        <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -72,21 +66,10 @@
         $(document).ready(function () {
             $("#form-edit").validate({
                 rules: {
-                    kategori_id: {
-                        required: true
-                    },
-                    barang_kode: {
-                        required: true
-                    },
-                    barang_nama: {
-                        required: true
-                    },
-                    harga_beli: {
-                        required: true
-                    },
-                    harga_jual: {
-                        required: true
-                    }
+                    user_id: { required: true },
+                    pembeli: { required: true, minlength: 3 },
+                    penjualan_kode: { required: true },
+                    penjualan_tanggal: { required: true }
                 },
                 submitHandler: function (form) {
                     $.ajax({
@@ -101,7 +84,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                dataBarang.ajax.reload();
+                                dataPenjualan.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function (prefix, val) {
@@ -129,6 +112,6 @@
                     $(element).removeClass('is-invalid');
                 }
             });
-        }); 
+        });
     </script>
 @endempty

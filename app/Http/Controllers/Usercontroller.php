@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\m_level;
+use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +20,7 @@ class UserController extends Controller
         $page = (object) [
             'title' => 'Daftar user yang terdaftar dalam sistem'
         ];
-        $level = m_level::all();
+        $level = LevelModel::all();
         $activeMenu = 'user'; // set menu yang sedang aktif
         return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
     }
@@ -38,14 +38,14 @@ class UserController extends Controller
         $page = (object) [
             'title' => 'Tambah user baru'
         ];
-        $level = m_level::all(); // ambil data level untuk ditampilkan di form
+        $level = LevelModel::all(); // ambil data level untuk ditampilkan di form
         $activeMenu = 'user'; // set menu yang sedang aktif
         return view('user.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
     }
 
     public function create_ajax()
     {
-        $level = m_level::select('level_id', 'level_nama')->get(); // ambil data level untuk ditampilkan di form
+        $level = LevelModel::select('level_id', 'level_nama')->get(); // ambil data level untuk ditampilkan di form
         return view('user.create_ajax', ['level' => $level]);
     }
 
@@ -99,13 +99,13 @@ class UserController extends Controller
     {
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
             ->with('level');
-        // Filter data user berdasarkan level_id
+        // Filter data user berdasarkan level_id 
         if ($request->level_id) {
             $users->where('level_id', $request->level_id);
         }
 
         return DataTables::of($users)
-            ->addIndexColumn()  // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
+            ->addIndexColumn()  // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)  
             ->addColumn('aksi', function ($user) {
                 $btn  = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
@@ -115,7 +115,7 @@ class UserController extends Controller
                     '/delete_ajax') . '\')"  class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
-            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
+            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html  
             ->make(true);
     }
 
@@ -138,13 +138,13 @@ class UserController extends Controller
     public function edit_ajax(string $id)
     {
         $user = UserModel::find($id);
-        $level = m_level::select('level_id', 'level_nama')->get();
+        $level = LevelModel::select('level_id', 'level_nama')->get();
         return view('user.edit_ajax', ['user' => $user, 'level' => $level]);
     }
 
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
+        // cek apakah request dari ajax 
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'level_id' => 'required|integer',
@@ -153,19 +153,19 @@ class UserController extends Controller
                 'password' => 'nullable|min:6|max:20'
             ];
 
-            // use Illuminate\Support\Facades\Validator;
+            // use Illuminate\Support\Facades\Validator; 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'   => false,    // respon json, true: berhasil, false: gagal
+                    'status'   => false,    // respon json, true: berhasil, false: gagal 
                     'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
+                    'msgField' => $validator->errors()  // menunjukkan field mana yang error 
                 ]);
             }
             $check = UserModel::find($id);
             if ($check) {
-                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
+                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request 
                     $request->request->remove('password');
                 }
                 $check->update($request->all());
@@ -209,21 +209,28 @@ class UserController extends Controller
 
     public function delete_ajax(Request $request, $id)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        if($request->ajax() || $request->wantsJson()){
             $user = UserModel::find($id);
-            if ($user) {
-                $user->delete();
-                return response()->json([
-                    'status'  => true,
-                    'message' => 'Data berhasil dihapus'
-                ]);
-            } else {
+            if($user){
+                try {
+                    UserModel::destroy($id);
+                    return response()->json([
+                        'status'  => true,
+                        'message' => 'Data berhasil dihapus'
+                    ]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Data user gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
+                    ]);
+                }
+            }else{
                 return response()->json([
                     'status'  => false,
                     'message' => 'Data tidak ditemukan'
                 ]);
             }
-        }
+    }
         redirect('/');
     }
 }

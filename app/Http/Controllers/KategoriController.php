@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\m_kategori;
+use App\Models\KategoriModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -66,7 +66,7 @@ class KategoriController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-            m_kategori::create($request->all());
+            KategoriModel::create($request->all());
             return response()->json([
                 'status' => true,
                 'message' => 'Data kategori berhasil disimpan'
@@ -82,7 +82,7 @@ class KategoriController extends Controller
             'kategori_kode' => 'required|string|min:3|unique:m_kategori,kategori_kode',
             'kategori_nama' => 'required|string|max: 100',
         ]);
-        m_kategori::create([
+        KategoriModel::create([
             'kategori_kode' => $request->kategori_kode,
             'kategori_nama' => $request->kategori_nama
         ]);
@@ -91,12 +91,12 @@ class KategoriController extends Controller
 
     public function list(Request $request)
     {
-        $kategoris = m_kategori::select('kategori_id', 'kategori_kode', 'kategori_nama');
+        $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
 
         return DataTables::of($kategoris)
-            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
+            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
             ->addIndexColumn()
-            ->addColumn('aksi', function ($kategori) {  // menambahkan kolom aksi
+            ->addColumn('aksi', function ($kategori) {  // menambahkan kolom aksi 
                 $btn  = '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/kategori/' . $kategori->kategori_id .
@@ -105,14 +105,14 @@ class KategoriController extends Controller
                     '/delete_ajax') . '\')"  class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
-            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
+            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
             ->make(true);
     }
 
     // Menampilkan detail kategori
     public function show(string $id)
     {
-        $kategori = m_kategori::find($id);
+        $kategori = KategoriModel::find($id);
         $breadcrumb = (object) [
             'title' => 'Detail Kategori',
             'list' => ['Home', 'Kategori', 'Detail']
@@ -128,7 +128,7 @@ class KategoriController extends Controller
     // Menampilkan halaman form edit kategori
     public function edit(string $id)
     {
-        $kategori = m_kategori::find($id);
+        $kategori = KategoriModel::find($id);
         $breadcrumb = (object) [
             'title' => 'Edit Kategori',
             'list' => ['Home', 'Kategori', 'Edit']
@@ -149,7 +149,7 @@ class KategoriController extends Controller
             'kategori_nama' => 'required|string|max: 100',
         ]);
 
-        m_kategori::find($id)->update([
+        KategoriModel::find($id)->update([
             // level_id harus diisi dan berupa angka
             'kategori_kode' => $request->kategori_kode,
             'kategori_nama' => $request->kategori_nama
@@ -159,34 +159,32 @@ class KategoriController extends Controller
 
     public function edit_ajax(string $id)
     {
-        $kategori = m_kategori::find($id);
+        $kategori = KategoriModel::find($id);
         return view('kategori.edit_ajax', ['kategori' => $kategori]);
     }
 
     public function update_ajax(Request $request, $id)
     {
-        // cek apakah request dari ajax
+        // cek apakah request dari ajax 
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'level_id' => 'required|integer',
-                'kategoriname' => 'required|max:20|unique:m_kategori,kategoriname,' . $id . ',kategori_id',
-                'nama'     => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'kategori_kode' => 'required|string|min:3|unique:m_kategori,kategori_kode,' . $id . ',kategori_id',
+                'kategori_nama' => 'required|string|max: 100',
             ];
 
-            // use Illuminate\Support\Facades\Validator;
+            // use Illuminate\Support\Facades\Validator; 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'   => false,    // respon json, true: berhasil, false: gagal
+                    'status'   => false,    // respon json, true: berhasil, false: gagal 
                     'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors()  // menunjukkan field mana yang error
+                    'msgField' => $validator->errors()  // menunjukkan field mana yang error 
                 ]);
             }
-            $check = m_kategori::find($id);
+            $check = KategoriModel::find($id);
             if ($check) {
-                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
+                if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request 
                     $request->request->remove('password');
                 }
                 $check->update($request->all());
@@ -207,13 +205,13 @@ class KategoriController extends Controller
     // Menghapus data kategori
     public function destroy(string $id)
     {
-        $check = m_kategori::find($id);
+        $check = KategoriModel::find($id);
         if (!$check) {
             // untuk mengecek apakah data kategori dengan id yang dimaksud ada atau tidak
             return redirect('/kategori')->with('error', 'Data kategori tidak ditemukan ');
         }
         try {
-            m_kategori::destroy($id);
+            KategoriModel::destroy($id);
             // Hapus data level
             return redirect('/kategori')->with('success', 'Data kategori berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -223,17 +221,17 @@ class KategoriController extends Controller
     }
     public function confirm_ajax(string $id)
     {
-        $kategori = m_kategori::find($id);
+        $kategori = KategoriModel::find($id);
         return view('kategori.confirm_ajax', ['kategori' => $kategori]);
     }
 
     public function delete_ajax(Request $request, $id)
     {
         if($request->ajax() || $request->wantsJson()){
-            $kategori = m_kategori::find($id);
+            $kategori = KategoriModel::find($id);
             if($kategori){
                 try {
-                    m_kategori::destroy($id);
+                    KategoriModel::destroy($id);
                     return response()->json([
                         'status'  => true,
                         'message' => 'Data berhasil dihapus'

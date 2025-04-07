@@ -1,39 +1,49 @@
-<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/stok/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">Tambah Data Stok</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Level Pengguna</label>
-                    <select name="level_id" id="level_id" class="form-control" required>
-                        <option value="">- Pilih Level -</option>
-                        @foreach($level as $l)
-                            <option value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
+                    <label>Barang</label>
+                    <select name="barang_id" id="barang_id" class="form-control" required>
+                        <option value="">- Pilih Barang -</option>
+                        @foreach($barang as $barang)
+                            <option value="{{ $barang->barang_id }}">{{ $barang->barang_nama }}</option>
                         @endforeach
                     </select>
-                    <small id="error-level_id" class="error-text form-text text-danger"></small>
+                    <small id="error-barang_id" class="error-text form-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Username</label>
-                    <input value="" type="text" name="username" id="username" class="form-control" required>
-                    <small id="error-username" class="error-text form-text text-danger"></small>
+                    <label>User</label>
+                    <select name="user_id" id="user_id" class="form-control" required>
+                        <option value="">- Pilih User -</option>
+                        @foreach($user as $user)
+                            <option value="{{ $user->user_id }}">{{ $user->nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-user_id" class="error-text form-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Nama</label>
-                    <input value="" type="text" name="nama" id="nama" class="form-control" required>
-                    <small id="error-nama" class="error-text form-text text-danger"></small>
+                    <label>Tanggal Stok</label>
+                    <input type="datetime-local" name="stok_tanggal" id="stok_tanggal" class="form-control" required>
+                    <small id="error-stok_tanggal" class="error-text form-text text-danger"></small>
                 </div>
+
                 <div class="form-group">
-                    <label>Password</label>
-                    <input value="" type="password" name="password" id="password" class="form-control" required>
-                    <small id="error-password" class="error-text form-text text-danger"></small>
+                    <label>Jumlah Stok</label>
+                    <input type="number" name="stok_jumlah" id="stok_jumlah" class="form-control" required min="1">
+                    <small id="error-stok_jumlah" class="error-text form-text text-danger"></small>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -45,10 +55,10 @@
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
-                level_id: { required: true, number: true },
-                username: { required: true, minlength: 3, maxlength: 20 },
-                nama: { required: true, minlength: 3, maxlength: 100 },
-                password: { required: true, minlength: 6, maxlength: 20 }
+                barang_id: { required: true },
+                user_id: { required: true },
+                stok_tanggal: { required: true },
+                stok_jumlah: { required: true, min: 1 }
             },
             submitHandler: function (form) {
                 $.ajax({
@@ -57,15 +67,15 @@
                     data: $(form).serialize(),
                     success: function (response) {
                         if (response.status) {
-                            $('#myModal').modal('hide');
+                            $('#modal-master').modal('hide'); // ID modal yang sesuai
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataUser.ajax.reload();
+                            dataStok.ajax.reload(); // pastikan variable ini sesuai dengan DataTable
                         } else {
-                            $('.error-text').text('');
+                            $('.error-text').text(''); // clear all error text
                             $.each(response.msgField, function (prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
                             });
@@ -84,12 +94,12 @@
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function (element, errorClass, validClass) {
+            highlight: function (element) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function (element, errorClass, validClass) {
+            unhighlight: function (element) {
                 $(element).removeClass('is-invalid');
             }
         });
-    }); 
+    });
 </script>
