@@ -37,6 +37,12 @@ class UserModel extends Authenticatable
         return $this->belongsTo(LevelModel::class, 'level_id','level_id');
     }
 
+    public function user()
+{
+    return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
+}
+
+
     // public function stok():BelongsTo
     // {
     //     return $this->belongsTo(LevelModel::class, 'level_id','level_id');

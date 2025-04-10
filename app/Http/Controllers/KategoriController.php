@@ -125,6 +125,13 @@ class KategoriController extends Controller
         return view('kategori.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
     }
 
+    public function show_ajax(string $id)
+{
+    $kategori = KategoriModel::find($id);
+    return view('kategori.show_ajax', ['kategori' => $kategori]);
+}
+
+
     // Menampilkan halaman form edit kategori
     public function edit(string $id)
     {

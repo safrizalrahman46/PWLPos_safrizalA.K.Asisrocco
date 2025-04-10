@@ -86,7 +86,8 @@
                             });
                         }
                     }
-                });
+                }
+            );
                 return false;
             },
             errorElement: 'span',

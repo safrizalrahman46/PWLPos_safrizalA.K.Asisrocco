@@ -48,7 +48,7 @@ class StokController extends Controller
         return DataTables::of($stoks)
             ->addIndexColumn()
             ->addColumn('aksi', function ($stok) {
-                $btn  = '<button onclick="modalAction(\'' . url('/stok/' . $stok->stok_id . '/show') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn  = '<button onclick="modalAction(\'' . url('/stok/' . $stok->stok_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/stok/' . $stok->stok_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/stok/' . $stok->stok_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
@@ -154,6 +154,13 @@ class StokController extends Controller
             'activeMenu' => $activeMenu
         ]);
     }
+
+    public function show_ajax(string $id)
+{
+    $stok = t_stok::with(['barang', 'user'])->find($id);
+    return view('stok.show_ajax', compact('stok'));
+}
+
 
     public function edit_ajax(string $id)
     {

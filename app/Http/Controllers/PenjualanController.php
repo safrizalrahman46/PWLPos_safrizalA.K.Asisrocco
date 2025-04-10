@@ -99,7 +99,7 @@ class PenjualanController extends Controller
                 return $row->user->nama ?? '-';
             })
             ->addColumn('aksi', function ($row) {
-                $btn  = '<button onclick="modalAction(\'' . url('/penjualan/' . $row->penjualan_id . '/show') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn  = '<button onclick="modalAction(\'' . url('/penjualan/' . $row->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $row->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $row->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button>';
                 return $btn;
@@ -129,10 +129,11 @@ class PenjualanController extends Controller
 
     // Tampilkan detail via modal
     public function show_ajax($id)
-    {
-        $data = t_penjualan::find($id);
-        return view('penjualan.show', compact('data'));
-    }
+{
+    $penjualan = t_penjualan::with('user')->find($id); // tambahkan relasi user
+    return view('penjualan.show_ajax', compact('penjualan'));
+}
+
 
     // Edit data penjualan via modal
     public function edit_ajax($id)
