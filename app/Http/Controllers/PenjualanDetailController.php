@@ -53,6 +53,9 @@ class PenjualanDetailController extends Controller
             // ->addColumn('barang_id', function ($row) {
             //     return $row->barang ? $row->barang->nama_barang : '-';
             // })
+              // ->addColumn('barang_id', function ($row) {
+            //     return $row->barang ? $row->barang->nama_barang : '-';
+            // })
             ->addColumn('barang_id', function ($row) {
                 return $row->barang_id ? $row->barang->barang_nama : 'NO RELATION';
             })
