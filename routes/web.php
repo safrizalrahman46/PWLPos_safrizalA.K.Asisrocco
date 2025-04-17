@@ -377,6 +377,26 @@ Route::group(['prefix' => 'stok'], function () {
     Route::delete('/{id}', [StokController::class, 'destroy']);
 });
 
+Route::group(['prefix' => 'supplier'], function () {
+    Route::get('/', [SupplierController::class, 'index']);
+    Route::post('/list', [SupplierController::class, 'list']);
+    Route::get('/create', [SupplierController::class, 'create']);
+    Route::post('/', [SupplierController::class, 'store']);
+    Route::get('/create_ajax', [SupplierController::class, 'create_ajax']);
+    Route::post('/ajax', [SupplierController::class, 'store_ajax']);
+    Route::get('/import',[SupplierController::class,'import']);
+    Route::post('/import_ajax',[SupplierController::class,'import_ajax']);
+    Route::get('/export_excel', [SupplierController::class, 'export_excel']);
+    Route::get('/export_pdf',[SupplierController::class,'export_pdf']);
+    Route::get('/{id}', [SupplierController::class, 'show']);
+    Route::get('/{id}/edit', [SupplierController::class, 'edit']);
+    Route::put('/{id}', [SupplierController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
+    Route::delete('/{id}', [SupplierController::class, 'destroy']);
+});
 
 // Route::group(['prefix' => 'supplier'], function () {
 //     Route::get('/', [SupplierController::class, 'index']);

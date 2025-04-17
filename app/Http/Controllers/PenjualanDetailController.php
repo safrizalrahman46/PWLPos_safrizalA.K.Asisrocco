@@ -50,9 +50,13 @@ class PenjualanDetailController extends Controller
             ->addColumn('penjualan_id', function ($row) {
                 return $row->penjualan ? $row->penjualan->penjualan_kode : '-';
             })
+            // ->addColumn('barang_id', function ($row) {
+            //     return $row->barang ? $row->barang->nama_barang : '-';
+            // })
             ->addColumn('barang_id', function ($row) {
-                return $row->barang ? $row->barang->nama_barang : '-';
+                return $row->barang_id ? $row->barang->barang_nama : 'NO RELATION';
             })
+
             ->addColumn('subtotal', fn($row) => $row->jumlah * $row->harga)
             ->addColumn('aksi', function ($row) {
                 $btn  = '<button onclick="modalAction(\'' . url('/penjualan-detail/' . $row->detail_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
