@@ -5,7 +5,9 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
+                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-info">Import Level</button>
+                <a href="{{ url('/level/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Level</a>
+                <a href="{{ url('/level/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Level</a>
                 <button onclick="modalAction('{{ url('level/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
             </div>
@@ -17,6 +19,24 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-1 control-label col-form-label">Filter: </label>
+                        <div class="col-3">
+                            <select class="form-control" id="level_id" name="level_id" required>
+                                <option value="">- Semua -</option>
+                                @foreach($level as $item)
+                                    <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted">Level</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <table class="table table-bordered table-striped table-hover table-sm" id="table_level">
                 <thead>
                     <tr>
@@ -45,15 +65,24 @@
             var dataLevel
             $(document).ready(function () {
                 dataLevel = $('#table_level').DataTable({
-                    // serverSide: true, jika ingin menggunakan server side processing 
+                    // serverSide: true, jika ingin menggunakan server side processing
                     serverSide: true,
-                    ajax: {
+                    {{--  ajax: {
                         "url": "{{ url('level/list') }}",
                         "dataType": "json",
                         "type": "POST",
+                    },  --}}
+                    ajax: {
+                        url: "{{ url('level/list') }}",
+                        dataType: "json",
+                        type: "POST",
+                        data: function (d) {
+                            d.level_id = $('#level_id').val(); // Kirim nilai filter ke server
+                        }
                     },
+
                     columns: [
-                        {  // nomor urut dari laravel datatable addIndexColumn() 
+                        {  // nomor urut dari laravel datatable addIndexColumn()
                             data: "DT_RowIndex",
                             className: "text-center",
                             orderable: false,
@@ -61,9 +90,9 @@
                         }, {
                             data: "level_kode",
                             className: "",
-                            // orderable: true, jika ingin kolom ini bisa diurutkan  
+                            // orderable: true, jika ingin kolom ini bisa diurutkan
                             orderable: true,
-                            // searchable: true, jika ingin kolom ini bisa dicari 
+                            // searchable: true, jika ingin kolom ini bisa dicari
                             searchable: true
                         }, {
                             data: "level_nama",
@@ -81,6 +110,6 @@
                 $('#level_id').on('change', function () {
                     dataLevel.ajax.reload();
                 });
-            }); 
+            });
         </script>
     @endpush
