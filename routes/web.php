@@ -664,4 +664,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [StokController::class, 'destroy']);
         });
     });
+    
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::post('/profile/update-picture', [UserController::class, 'updateProfilePicture']);
 });

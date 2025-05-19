@@ -12,6 +12,17 @@ class UserModel extends Authenticatable
 {
     use HasFactory;
 
+
+        public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
     protected $table = 'm_user';
     protected $primaryKey = 'user_id';
 
@@ -50,5 +61,12 @@ class UserModel extends Authenticatable
     public function getRole()
     {
         return $this->level->level_kode;
+    }
+
+    public function getProfilePictureUrl()
+    {
+        return $this->image
+            ? asset($this->image)
+            : asset('adminlte/dist/img/user2-160x160.jpg');
     }
 }
