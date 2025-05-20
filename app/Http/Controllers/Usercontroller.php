@@ -366,7 +366,7 @@ class UserController extends Controller
         return $pdf->stream('Data User' . date('Y-m-d H:i:s') . '.pdf');
     }
 
-    public function profile()
+  public function profile()
     {
         $user = auth()->user();
         $breadcrumb = (object) [

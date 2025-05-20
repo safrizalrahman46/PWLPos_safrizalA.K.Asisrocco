@@ -33,12 +33,16 @@ class UserModel extends Authenticatable implements JWTSubject
         'image' //tambahkan
     ];
 
-    public function image(): Attribute
-    {
-        return Attribute::make(
-            get: fn($image) => asset('storage/posts/' . $image),
-        );
-    }
+
+    //KODE FAKKK
+    // public function image(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($image) => asset('storage/posts/' . $image),
+    //     );
+    // }
+
+    
     protected $hidden = [
         'password'
     ];
@@ -67,4 +71,22 @@ class UserModel extends Authenticatable implements JWTSubject
     {
         return $this->level->level_kode;
     }
+  public function getProfilePictureUrl()
+{
+    if ($this->image) {
+        // Check if image exists in public/uploads/profile
+        if (file_exists(public_path($this->image))) {
+            return asset($this->image);
+        }
+
+        // Check if image exists in storage (if you want to support both)
+        if (file_exists(storage_path('app/public/' . $this->image))) {
+            return asset('storage/' . $this->image);
+        }
+    }
+
+    // Default image
+    return asset('adminlte/dist/img/user2-160x160.jpg');
+}
+
 }
